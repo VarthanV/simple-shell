@@ -1,5 +1,0 @@
-
-/*
-    Declarations of builtins
-*/
-
