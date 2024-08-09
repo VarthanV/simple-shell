@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE -1
@@ -71,7 +72,26 @@ char *read_ln()
 
 char **tokenize_args(char *stream)
 {
-    
+    int buf_size = TOK_BUFSIZE, pos = 0;
+    char **tokens = malloc(buf_size * sizeof(char *));
+    char *token;
+
+    if (!tokens)
+    {
+        fprintf(stderr, "lsh: allocation error\n");
+        exit(EXIT_FAILURE);
+    }
+
+    token = strtok(stream, TOK_DELIM);
+    while (token != NULL)
+    {
+        tokens[pos] = token;
+        pos++;
+        token = strtok(NULL, TOK_DELIM);
+    }
+
+    tokens[pos] = NULL;
+    return tokens;
 }
 
 int exec(char **args)
