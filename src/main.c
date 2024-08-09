@@ -1,30 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <builtins.h>
 
 #define EXIT_SUCCESS 0
-#define EXIT_FAILURE -1
 #define READ_BUF_SIZE 1024
 #define TOK_BUFSIZE 64
 #define TOK_DELIM " \t\r\n\a"
-
-void loop()
-{
-    char *line;
-    char **args;
-    int status;
-
-    do
-    {
-        printf(">");
-        line = read_ln();
-        args = tokenize_args(line);
-        status = exec(args);
-        free(line);
-        free(args);
-
-    } while (status);
-}
 
 char *read_ln()
 {
@@ -94,8 +78,61 @@ char **tokenize_args(char *stream)
     return tokens;
 }
 
+int launch(char **args)
+{
+    pid_t pid, wpid; // process id and wait pid
+    int status;
+    //  https://www.geeksforgeeks.org/fork-system-call/
+    pid = fork();
+    if (pid == 0)
+    {
+        // Child process
+        if (execvp(args[0], args) == -1)
+        {
+            perror("vsh");
+        }
+        exit(EXIT_FAILURE);
+    }
+    else if (pid < 0)
+    {
+        perror("error forking");
+    }
+    else
+    {
+        // Parent process
+        do
+        {
+            wpid = waitpid(pid, &status, WUNTRACED);
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+    }
+
+    return 1;
+}
+
 int exec(char **args)
 {
+    int i;
+    if (args[0] == NULL)
+        return 1;
+    
+}
+
+void loop()
+{
+    char *line;
+    char **args;
+    int status;
+
+    do
+    {
+        printf("->");
+        line = read_ln();
+        args = tokenize_args(line);
+        status = exec(args);
+        free(line);
+        free(args);
+
+    } while (status);
 }
 
 int main(int argc, char **argv)
