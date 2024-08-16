@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <builtins.h>
+#include <signal.h>
 
 #define EXIT_SUCCESS 0
 #define READ_BUF_SIZE 1024
@@ -227,8 +228,17 @@ void loop()
     } while (status);
 }
 
+void interruptHandler()
+{
+    magenta();
+    printf("Good bye (: \n");
+    reset();
+    exit(0);
+}
+
 int main(int argc, char **argv)
 {
+    signal(SIGINT, interruptHandler);
     loop();
     return EXIT_SUCCESS;
 }

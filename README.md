@@ -14,3 +14,7 @@ A shell does three main things in its lifetime.
 gcc src/main.c -o <DESIRED_OUTPUT_FILE_NAME>
 ```
 The desired output file will be an executable  and the shell will open
+
+# TODO
+
+- [] add a Makefile to make lives easier
