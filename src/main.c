@@ -29,6 +29,21 @@ int lsh_num_builtins()
     return sizeof(builtin_str) / sizeof(char *);
 }
 
+void blue()
+{
+    printf("\033[0;34m");
+}
+
+void reset()
+{
+    printf("\x1B[0m");
+}
+
+void magenta()
+{
+    printf("\x1B[35m");
+}
+
 /*
   Builtin function implementations.
 */
@@ -51,16 +66,22 @@ int lsh_cd(char **args)
 int lsh_help(char **args)
 {
     int i;
+    magenta();
     printf("VSH help !!\n");
     printf("Type program names and arguments, and hit enter.\n");
     printf("The following are built in:\n");
+    reset();
+    blue();
 
     for (i = 0; i < lsh_num_builtins(); i++)
     {
         printf("  %s\n", builtin_str[i]);
     }
 
+    reset();
+    magenta();
     printf("Use the man command for information on other programs.\n");
+    reset();
     return 1;
 }
 
@@ -194,7 +215,9 @@ void loop()
 
     do
     {
+        blue();
         printf("->");
+        reset();
         line = read_ln();
         args = tokenize_args(line);
         status = exec(args);
