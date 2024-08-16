@@ -15,6 +15,13 @@ gcc src/main.c -o <DESIRED_OUTPUT_FILE_NAME>
 ```
 The desired output file will be an executable  and the shell will open
 
+# Commands
+
+```shell
+help
+```
+The help gives the list of commands available and how to navigate this shell
+
 # TODO
 
 - [] add a Makefile to make lives easier
